@@ -1,0 +1,29 @@
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+# 1. THE BRAIN: Define a Convolutional Neural Network (CNN)
+def build_vision_ai():
+    model = models.Sequential([
+        # This layer 'looks' for edges and shapes
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D((2, 2)),
+        # This part makes a decision based on the shapes
+        layers.Flatten(),
+        layers.Dense(64, activation='relu'),
+        layers.Dense(10) # 10 different categories (dogs, cars, etc.)
+    ])
+    return model
+
+# 2. THE DATA: Using a standard 'massive' dataset (CIFAR-10)
+print("Loading 60,000 images...")
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
+
+# 3. RUNNING IT
+model = build_vision_ai()
+model.compile(optimizer='adam', 
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+print("Ready to train on massive image data!")
